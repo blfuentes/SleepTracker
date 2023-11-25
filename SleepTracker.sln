@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SleepTracker-DB", "SleepTracker-DB\SleepTracker-DB.sqlproj", "{434178ED-2EC7-4293-9297-280B4734D4A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,12 @@ Global
 		{8AD4D019-301E-4428-B99E-272E614265A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AD4D019-301E-4428-B99E-272E614265A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AD4D019-301E-4428-B99E-272E614265A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{434178ED-2EC7-4293-9297-280B4734D4A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{434178ED-2EC7-4293-9297-280B4734D4A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{434178ED-2EC7-4293-9297-280B4734D4A7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{434178ED-2EC7-4293-9297-280B4734D4A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{434178ED-2EC7-4293-9297-280B4734D4A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{434178ED-2EC7-4293-9297-280B4734D4A7}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,18 @@
+# Use the official image as a parent image
+FROM mcr.microsoft.com/mssql/server:2019-latest
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy the scripts into the container
+COPY . .
+
+# Run the command inside your container filesystem
+RUN chmod +x ./entrypoint.sh
+
+# Set environment variables
+ENV SA_PASSWORD=YourStrongPassword1
+ENV ACCEPT_EULA=Y
+
+# Run the script on container startup
+CMD /bin/bash ./entrypoint.sh
