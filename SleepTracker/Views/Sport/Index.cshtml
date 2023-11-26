@@ -1,0 +1,33 @@
+﻿@using SleepTracker.Models.Entities;
+@model IEnumerable<SleepTracker.Models.Entities.SportViewModel>
+
+    @{
+    ViewData["Title"] = "Sport Page";
+    }
+
+
+    <div class="text-center">
+        <h1 class="display-4">List of available sports</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Notes</th>
+                    <!-- Add other columns as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var sport in Model)
+                {
+                <tr>
+                    <td>@sport.SportID</td>
+                    <td>@sport.SportName</td>
+                    <td>@sport.SportNotes</td>
+                    <!-- Add other columns as needed -->
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>

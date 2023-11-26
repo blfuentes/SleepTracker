@@ -61,6 +61,7 @@
     <None Include="Dockerfile" />
     <None Include="build docker.ps1" />
     <None Include="up docker.ps1" />
+    <None Include="CodeToDB.scmp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="entrypoint.sh" />

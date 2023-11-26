@@ -1,1 +1,1 @@
-﻿docker run -d -p 1433:1433 --name msseqlserver mssqlserver
+﻿docker run -d -p 1433:1433 --network=mynetwork --name mssqlserver mssqlserver
