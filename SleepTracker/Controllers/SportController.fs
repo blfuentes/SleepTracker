@@ -20,12 +20,27 @@ type SportController (logger : ILogger<SportController>) =
             } |> Async.RunSynchronously
         this.View(sports |> Seq.map(fun s -> { SportID = s.SportID; SportName = s.SportName; SportNotes = s.SportNotes }))
 
-    [<ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)>]
-    member this.Error () =
-        let reqId = 
-            if isNull Activity.Current then
-                this.HttpContext.TraceIdentifier
-            else
-                Activity.Current.Id
+    [<HttpGet>]
+    member this.Create () =
+        this.View()
 
-        this.View({ RequestId = reqId })
+    [<HttpPost>]
+    [<ActionName("Create")>] // This is necessary because the method name is different from the action name
+    member this.CreatePost() =
+        if not (this.ModelState.IsValid) then
+            this.BadRequest() :> ActionResult
+        else
+            let existingSports = 
+                async {
+                    let! tmpSports = DatabaseService.getSports() |> Async.AwaitTask
+                    return tmpSports
+                } |> Async.RunSynchronously
+            let sport = existingSports |> Seq.tryFind (fun s -> s.SportName = (this.Request.Form["SportName"] |> Seq.head))
+            match sport with
+            | Some _ -> this.Conflict() :> ActionResult
+            | None ->
+                let newSport : SportEntity.Sport = { SportID = 0; SportName = (this.Request.Form["SportName"] |> Seq.head); SportNotes = (this.Request.Form["SportNotes"] |> Seq.head) }
+                let result = DatabaseService.createSport(newSport) |> Async.AwaitTask |> Async.RunSynchronously
+                match result with
+                | 1 -> this.Created() :> ActionResult
+                | _ -> this.BadRequest() :> ActionResult

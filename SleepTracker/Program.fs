@@ -20,6 +20,7 @@ module Program =
             .AddRazorRuntimeCompilation()
 
         builder.Services.AddRazorPages()
+        builder.Services.AddMvc()
 
         let app = builder.Build()
 
@@ -36,6 +37,12 @@ module Program =
         app.MapControllerRoute(name = "default", pattern = "{controller=Home}/{action=Index}/{id?}")
 
         app.MapRazorPages()
+
+        // Use Endpoints
+        app.UseEndpoints(fun endpoints ->
+            endpoints.MapControllers() |> ignore
+            // Add other endpoint mappings as needed
+        ) |> ignore
 
         app.Run()
 
