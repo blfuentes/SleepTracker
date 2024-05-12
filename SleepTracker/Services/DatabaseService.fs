@@ -7,8 +7,7 @@ module DatabaseService =
     open Dapper.FSharp.MSSQL
     open SleepTracker.Models.Entities
 
-    let private connectionString = "Server=mssqlserver,1433;Database=SleepTracker;User Id=sa;Password=testpassword123!;"
-    let getSports () =
+    let getSports (connectionString: string) =
         let sportTable = table<SportEntity.Sport>
         let conn = new SqlConnection(connectionString)
         conn.Open()
@@ -17,7 +16,7 @@ module DatabaseService =
             selectAll
         } |> conn.SelectAsync<SportEntity.Sport>
 
-    let createSport (sport: SportEntity.Sport) =
+    let createSport (connectionString: string, sport: SportEntity.Sport) =
         let sportTable = table<SportEntity.Sport>
         let conn = new SqlConnection(connectionString)
         conn.Open()

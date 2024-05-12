@@ -5,6 +5,8 @@ namespace SleepTracker
 open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
+open Microsoft.Extensions.Configuration.UserSecrets
+
 
 module Program =
     let exitCode = 0
@@ -43,7 +45,7 @@ module Program =
             endpoints.MapControllers() |> ignore
             // Add other endpoint mappings as needed
         ) |> ignore
-
+        
         app.Run()
 
         exitCode
