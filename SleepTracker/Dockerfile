@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["SleepTracker/SleepTracker.fsproj", "SleepTracker/"]
-RUN dotnet restore "./SleepTracker/./SleepTracker.fsproj"
+RUN dotnet restore "./SleepTracker/SleepTracker.fsproj"
 COPY . .
 WORKDIR "/src/SleepTracker"
 RUN dotnet build "./SleepTracker.fsproj" -c $BUILD_CONFIGURATION -o /app/build

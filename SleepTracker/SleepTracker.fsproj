@@ -25,6 +25,7 @@
 		<PackageReference Include="Dapper.FSharp" />
 		<PackageReference Include="FSharp.Core" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
 		<PackageReference Include="System.Data.SqlClient" />
 	</ItemGroup>

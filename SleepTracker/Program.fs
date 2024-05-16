@@ -1,11 +1,12 @@
 namespace SleepTracker
 
+
 #nowarn "20"
 
 open Microsoft.AspNetCore.Builder
+open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
-open Microsoft.Extensions.Configuration.UserSecrets
 
 
 module Program =
@@ -14,19 +15,21 @@ module Program =
     [<EntryPoint>]
     let main args =
         Dapper.FSharp.MSSQL.OptionTypes.register()
-        let builder = WebApplication.CreateBuilder(args)
 
-        builder
-            .Services
+        let builder = WebApplication.CreateBuilder(args)
+        builder.WebHost.ConfigureAppConfiguration(fun builderContext config -> 
+                            config.AddJsonFile(sprintf "appsettings.%s.json" builderContext.HostingEnvironment.EnvironmentName, optional = false, reloadOnChange = true)
+                            config.AddUserSecrets()
+                            config.AddEnvironmentVariables() |> ignore)
+
+        builder.Services
             .AddControllersWithViews()
             .AddRazorRuntimeCompilation()
-
         builder.Services.AddRazorPages()
         builder.Services.AddMvc()
 
         let app = builder.Build()
-
-        if not (builder.Environment.IsDevelopment()) then
+        if not (builder.Environment.IsDevelopment() || builder.Environment.EnvironmentName = "local") then
             app.UseExceptionHandler("/Home/Error")
             app.UseHsts() |> ignore // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 

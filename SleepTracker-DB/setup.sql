@@ -1,6 +1,9 @@
 ﻿USE master;
 GO
 
+DROP DATABASE IF EXISTS SleepTracker;
+GO
+
 -- Create database
 CREATE DATABASE SleepTracker;
 GO
@@ -9,6 +12,7 @@ USE SleepTracker;
 GO
 
 -- Table definitions
+-- SPORT
 CREATE TABLE Sport (
 	SportID INT IDENTITY(1,1) PRIMARY KEY,
 	SportName VARCHAR(255) NOT NULL,
@@ -19,6 +23,7 @@ GO
 INSERT INTO Sport (SportName, SportNotes)
 VALUES ('Walking', ''), ('Swimming', ''), ('Gym', '');
 
+-- SLEEP QUALITY
 CREATE TABLE SleepQuality (
 	SleepQualityID INT IDENTITY(1,1) PRIMARY KEY,
 	SleepQualityName VARCHAR(255) NOT NULL
@@ -28,7 +33,7 @@ GO
 INSERT INTO SleepQuality (SleepQualityName)
 VALUES ('Bad'), ('Cannot fall asleep'), ('Good');
 
-
+-- SLEEP
 CREATE TABLE Sleep (
 	SleepID INT IDENTITY(1,1) PRIMARY KEY,
 	SleepDate DATE NOT NULL,
