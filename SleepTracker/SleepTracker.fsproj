@@ -7,9 +7,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="Data\setup.sql" />
+		<Compile Include="Utils\ExtensionMethods.fs" />
 		<Compile Include="Models\Entities\Sport.fs" />
 		<Compile Include="Models/ErrorViewModel.fs" />
 		<Compile Include="Models\SportViewModel.fs" />
+		<Compile Include="Services\DatabaseInitializer.fs" />
 		<Compile Include="Services\DatabaseService.fs" />
 		<Compile Include="Controllers\SportController.fs" />
 		<Compile Include="Controllers/HomeController.fs" />
@@ -25,6 +28,8 @@
 		<PackageReference Include="Dapper.FSharp" />
 		<PackageReference Include="FSharp.Core" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
+		<PackageReference Include="Microsoft.Data.Sqlite" />
+		<PackageReference Include="Microsoft.Data.Sqlite.Core" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
 		<PackageReference Include="System.Data.SqlClient" />

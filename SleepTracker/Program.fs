@@ -1,6 +1,7 @@
 namespace SleepTracker
 
 
+
 #nowarn "20"
 
 open Microsoft.AspNetCore.Builder
@@ -8,6 +9,7 @@ open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 
+open SleepTracker.Services
 
 module Program =
     let exitCode = 0
@@ -49,6 +51,10 @@ module Program =
             // Add other endpoint mappings as needed
         ) |> ignore
         
+        // Verify if the database is created
+        let connectionString = app.Configuration.GetConnectionString("SqliteConnection")
+        DatabaseService.getConnection(connectionString) |> DatabaseInitializer.safeInit
+
         app.Run()
 
         exitCode
