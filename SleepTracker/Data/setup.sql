@@ -18,6 +18,16 @@ CREATE TABLE SleepQuality (
 INSERT INTO SleepQuality (SleepQualityID, SleepQualityName)
 VALUES (NULL, 'Bad'), (NULL, 'Cannot fall asleep'), (NULL, 'Good');
 
+-- DRUG
+CREATE TABLE Drug (
+	DrugID INTEGER PRIMARY KEY,
+	DrugName VARCHAR(255) NOT NULL,
+	DrugNotes VARCHAR(255)
+);
+-- insert values into Drug
+INSERT INTO Drug (DrugID, DrugName, DrugNotes)
+VALUES (NULL, 'Topiramato', 'Migraña');
+
 -- SLEEP
 CREATE TABLE Sleep (
 	SleepID INTEGER PRIMARY KEY,
@@ -28,9 +38,12 @@ CREATE TABLE Sleep (
 	WakeTime TIME NOT NULL,
 	SportID INT NOT NULL,
 	SleepQualityID INT NOT NULL,
+	DrugID INT,
 	SleepNotes VARCHAR(255),
 	FOREIGN KEY(SportID)
 		REFERENCES Sport(SportID),
 	FOREIGN KEY(SleepQualityID)
-		REFERENCES SleepQuality(SleepQualityID)
+		REFERENCES SleepQuality(SleepQualityID),
+	FOREIGN KEY(DrugID)
+		REFERENCES Drug(DrugID)
 );
