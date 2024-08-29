@@ -10,23 +10,21 @@ open SleepTracker.Services
 open SleepTracker.Models.Entities
 open Microsoft.Extensions.Configuration
 
+[<ApiController>]
+[<Route("[controller]")>]
 type SportController (logger : ILogger<SportController>, configuration: IConfiguration) =
-    inherit Controller()
+    inherit ControllerBase()
 
-    member this.Index () =
+    [<HttpGet>]
+    member _.Get () =
         let sports = 
             async {
                 let! tmpSports = DatabaseService.getSports(configuration.GetConnectionString(DatabaseService.ConnectionName)) |> Async.AwaitTask
                 return tmpSports
             } |> Async.RunSynchronously
-        this.View(sports |> Seq.map(fun s -> { SportID = s.SportID; SportName = s.SportName; SportNotes = s.SportNotes }))
-
-    [<HttpGet>]
-    member this.Create () =
-        this.View()
+        sports |> Seq.map(fun s -> { SportID = s.SportID; SportName = s.SportName; SportNotes = s.SportNotes })
 
     [<HttpPost>]
-    [<ActionName("Create")>] // This is necessary because the method name is different from the action name
     member this.CreatePost() =
         if not (this.ModelState.IsValid) then
             this.BadRequest() :> ActionResult

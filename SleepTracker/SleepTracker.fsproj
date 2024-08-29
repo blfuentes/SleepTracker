@@ -15,7 +15,6 @@
 		<Compile Include="Services\DatabaseInitializer.fs" />
 		<Compile Include="Services\DatabaseService.fs" />
 		<Compile Include="Controllers\SportController.fs" />
-		<Compile Include="Controllers/HomeController.fs" />
 		<Compile Include="Program.fs" />
 	</ItemGroup>
 

@@ -1,7 +1,5 @@
 namespace SleepTracker
 
-
-
 #nowarn "20"
 
 open Microsoft.AspNetCore.Builder
@@ -24,13 +22,20 @@ module Program =
                             config.AddUserSecrets()
                             config.AddEnvironmentVariables() |> ignore)
 
-        builder.Services
-            .AddControllersWithViews()
-            .AddRazorRuntimeCompilation()
-        builder.Services.AddRazorPages()
-        builder.Services.AddMvc()
+        builder.Services.AddControllers()
+
+        builder.Services.AddCors(fun options -> 
+            options.AddPolicy("AllowAll", fun builder -> 
+                 builder.AllowAnyHeader()
+                        .AllowAnyOrigin()
+                        .WithMethods("GET", "POST") |> ignore))
+            |> ignore
+
 
         let app = builder.Build()
+
+        app.UseCors("AllowAll")
+
         if not (builder.Environment.IsDevelopment() || builder.Environment.EnvironmentName = "local") then
             app.UseExceptionHandler("/Home/Error")
             app.UseHsts() |> ignore // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -40,10 +45,6 @@ module Program =
         app.UseStaticFiles()
         app.UseRouting()
         app.UseAuthorization()
-
-        app.MapControllerRoute(name = "default", pattern = "{controller=Home}/{action=Index}/{id?}")
-
-        app.MapRazorPages()
 
         // Use Endpoints
         app.UseEndpoints(fun endpoints ->
