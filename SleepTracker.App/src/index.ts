@@ -1,4 +1,6 @@
 import "./app.scss";
+import "./models/sports";
+const sportTemplate = require("../assets/templates/sports.html");
 
 function main(): void {
   const button = document.querySelector("#testButton");
@@ -11,7 +13,7 @@ function main(): void {
 function testSubmitHandler(e: Event): void {
   e.preventDefault();
   const outputElement = document.querySelector("#output");
-  outputElement.textContent = "Scripts work!";
+  outputElement!.textContent = "Scripts work!";
 }
 
 function testImageHandler(e: Event): void {
@@ -24,16 +26,35 @@ function testImageHandler(e: Event): void {
   image.style.width = "200px";
 
   const imageWrapper = document.getElementById("imageTest");
-  imageWrapper.appendChild(image);
+  imageWrapper?.appendChild(image);
 }
 
-function testApiHandler(e: Event): void {
+async function loadHTMLContent(url: string): Promise<string> {
+  const response = await fetch(url);
+  return response.text();
+}
+
+async function testApiHandler(e: Event): Promise<void> {
   e.preventDefault();
-  fetch(process.env.API_URL + `/sport`)
-    .then((response) => response.json())
-    .then((json) => {
-      console.log(json);
+  try {
+    const response = await fetch(process.env.API_URL + `/sport`);
+    const json = await response.json();
+    const apiResponseContainer = document.getElementById("apiResponse");
+    const template = sportTemplate.default;
+    apiResponseContainer!.innerHTML = template;
+    const sportContainer = document.getElementsByClassName("sportContainer")[0];
+    const sports = json as Sport[];
+    sports.forEach((sport) => {
+      const sportElement = document.createElement("div");
+      sportElement.textContent = `${sport.sportName} - ${sport.sportNotes}`;
+      sportContainer!.appendChild(sportElement);
     });
+
+    console.log(sports);
+
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 main();

@@ -7,7 +7,7 @@ CREATE TABLE Sport (
 );
 -- insert values into Sport
 INSERT INTO Sport (SportID, SportName, SportNotes)
-VALUES (NULL, 'Walking', ''), (NULL, 'Swimming', ''), (NULL, 'Gym', '');
+VALUES (NULL, 'Walking', '1h/225kcal'), (NULL, 'Swimming', '1h/449kcal'), (NULL, 'Gym', '1h/670kcal');
 
 -- SLEEP QUALITY
 CREATE TABLE SleepQuality (
