@@ -1,15 +1,22 @@
 $font-family: Arial, Helvetica, sans-serif;
-$color: red;
 
-h1 {
+body {
     font-family: $font-family;
-    color: $color;
+    margin: 0;
+    padding: 0;
 }
-
-.sportContainer {
+.navbar {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    margin: 0 auto;
-    width: 80%;
+    justify-content: center;
+    background-color: #333;
+}
+.navbar a {
+    color: white;
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+}
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
 }

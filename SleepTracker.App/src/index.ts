@@ -2,48 +2,73 @@ import "./app.scss";
 import "./models/sports";
 const sportTemplate = require("../assets/templates/sports.html");
 
-function main(): void {
-  const button = document.querySelector("#testButton");
-  button?.addEventListener("click", testSubmitHandler);
-  document.addEventListener("DOMContentLoaded", testImageHandler);
-  const apiButton = document.querySelector("#apiButton");
-  apiButton?.addEventListener("click", testApiHandler);
+async function main(): Promise<void> {
+  // add event listeners to all links
+  const navbar = document.getElementsByClassName("navbar")[0];
+  const links = [...navbar.getElementsByTagName("a")];
+  links.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const href = link.getAttribute("href");
+      if (href) {
+        loadData(href.replace("#", "/")).then((data) => {
+          if (!data) {
+            console.log("No data found");
+            return;
+          }
+          if (href === "#sport") {
+            const sports = data as Sport[];
+            const apiResponseContainer = document.getElementById("content");
+            const template = sportTemplate.default;
+            apiResponseContainer!.innerHTML = template;
+            const sportContainer = document.getElementsByClassName("sportContainer")[0];
+
+            sports.forEach((sport: Sport) => {
+              const sportElement = document.createElement("div");
+              sportElement.textContent = `${sport.sportName} - ${sport.sportNotes}`;
+              sportContainer!.appendChild(sportElement);
+            });
+          }
+        });
+      }
+    });
+  });
 }
 
-function testSubmitHandler(e: Event): void {
-  e.preventDefault();
-  const outputElement = document.querySelector("#output");
-  outputElement!.textContent = "Scripts work!";
+async function loadData(href: string): Promise<Object> {
+  try {
+    const response = await fetch(process.env.API_URL + href);
+    const json = await response.json();
+    const data = json as any;
+    if (!data) {
+      console.log("No data found");
+      return {};
+    }
+    return data;
+  } catch (error) {
+    console.error(error);
+    return {}
+  }
 }
 
-function testImageHandler(e: Event): void {
-  e.preventDefault();
-  const imageModule = require("../assets/test-image.jpg?as=webp");
-  const imageSrc = imageModule.default || imageModule; // Access the default property if it exists
-
-  const image = document.createElement("img");
-  image.src = imageSrc;
-  image.style.width = "200px";
-
-  const imageWrapper = document.getElementById("imageTest");
-  imageWrapper?.appendChild(image);
-}
-
-async function loadHTMLContent(url: string): Promise<string> {
-  const response = await fetch(url);
-  return response.text();
-}
 
 async function testApiHandler(e: Event): Promise<void> {
   e.preventDefault();
   try {
+    // get data from api
     const response = await fetch(process.env.API_URL + `/sport`);
     const json = await response.json();
-    const apiResponseContainer = document.getElementById("apiResponse");
+    const sports = json as Sport[];
+    if (!sports) {
+      console.log("No sports found");
+      return;
+    }
+
+    const apiResponseContainer = document.getElementById("content");
     const template = sportTemplate.default;
     apiResponseContainer!.innerHTML = template;
     const sportContainer = document.getElementsByClassName("sportContainer")[0];
-    const sports = json as Sport[];
+
     sports.forEach((sport) => {
       const sportElement = document.createElement("div");
       sportElement.textContent = `${sport.sportName} - ${sport.sportNotes}`;
