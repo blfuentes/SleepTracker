@@ -1,6 +1,7 @@
 import "./app.scss";
-import "./models/sports";
-const sportTemplate = require("../assets/templates/sports.html");
+import "./services/sport/models/sport";
+
+const { SportService } = require("./services/sport/sport-service");
 
 async function main(): Promise<void> {
   // add event listeners to all links
@@ -17,17 +18,7 @@ async function main(): Promise<void> {
             return;
           }
           if (href === "#sport") {
-            const sports = data as Sport[];
-            const apiResponseContainer = document.getElementById("content");
-            const template = sportTemplate.default;
-            apiResponseContainer!.innerHTML = template;
-            const sportContainer = document.getElementsByClassName("sportContainer")[0];
-
-            sports.forEach((sport: Sport) => {
-              const sportElement = document.createElement("div");
-              sportElement.textContent = `${sport.sportName} - ${sport.sportNotes}`;
-              sportContainer!.appendChild(sportElement);
-            });
+            SportService.generateSportContent(data as Sport[]);
           }
         });
       }
