@@ -1,7 +1,7 @@
 import "./app.scss";
 import "./services/sport/models/sport";
 
-const { SportService } = require("./services/sport/sport-service");
+import SportService from "./services/sport/sport-service";
 
 async function main(): Promise<void> {
   // add event listeners to all links
@@ -43,34 +43,34 @@ async function loadData(href: string): Promise<Object> {
 }
 
 
-async function testApiHandler(e: Event): Promise<void> {
-  e.preventDefault();
-  try {
-    // get data from api
-    const response = await fetch(process.env.API_URL + `/sport`);
-    const json = await response.json();
-    const sports = json as Sport[];
-    if (!sports) {
-      console.log("No sports found");
-      return;
-    }
+// async function testApiHandler(e: Event): Promise<void> {
+//   e.preventDefault();
+//   try {
+//     // get data from api
+//     const response = await fetch(process.env.API_URL + `/sport`);
+//     const json = await response.json();
+//     const sports = json as Sport[];
+//     if (!sports) {
+//       console.log("No sports found");
+//       return;
+//     }
 
-    const apiResponseContainer = document.getElementById("content");
-    const template = sportTemplate.default;
-    apiResponseContainer!.innerHTML = template;
-    const sportContainer = document.getElementsByClassName("sportContainer")[0];
+//     const apiResponseContainer = document.getElementById("content");
+//     const template = sportTemplate.default;
+//     apiResponseContainer!.innerHTML = template;
+//     const sportContainer = document.getElementsByClassName("sportContainer")[0];
 
-    sports.forEach((sport) => {
-      const sportElement = document.createElement("div");
-      sportElement.textContent = `${sport.sportName} - ${sport.sportNotes}`;
-      sportContainer!.appendChild(sportElement);
-    });
+//     sports.forEach((sport) => {
+//       const sportElement = document.createElement("div");
+//       sportElement.textContent = `${sport.sportName} - ${sport.sportNotes}`;
+//       sportContainer!.appendChild(sportElement);
+//     });
 
-    console.log(sports);
+//     console.log(sports);
 
-  } catch (error) {
-    console.error(error);
-  }
-}
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
 
 main();

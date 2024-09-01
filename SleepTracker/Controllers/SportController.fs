@@ -36,7 +36,7 @@ type SportController (logger : ILogger<SportController>, configuration: IConfigu
                 } |> Async.RunSynchronously
             let sport = existingSports |> Seq.tryFind (fun s -> s.SportName = (this.Request.Form["SportName"] |> Seq.head))
             match sport with
-            | Some _ -> this.Conflict() :> ActionResult
+            | Some _ -> this.Conflict()
             | None ->
                 let newSport : SportEntity.Sport = { SportID = 0; SportName = (this.Request.Form["SportName"] |> Seq.head); SportNotes = (this.Request.Form["SportNotes"] |> Seq.head) }
                 let result = DatabaseService.createSport(configuration.GetConnectionString(DatabaseService.ConnectionName), newSport) |> Async.AwaitTask |> Async.RunSynchronously
