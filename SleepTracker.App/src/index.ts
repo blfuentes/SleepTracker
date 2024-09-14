@@ -1,5 +1,6 @@
 import "./app.scss";
 import "./services/sport/models/sport";
+import "./services/sport/models/sport-binding";
 
 import SportService from "./services/sport/sport-service";
 
@@ -7,6 +8,7 @@ async function main(): Promise<void> {
   // add event listeners to all links
   const navbar = document.getElementsByClassName("navbar")[0];
   const links = [...navbar.getElementsByTagName("a")];
+  const sportService = new SportService();
   links.forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
@@ -18,7 +20,7 @@ async function main(): Promise<void> {
             return;
           }
           if (href === "#sport") {
-            SportService.generateSportContent(data as Sport[]);
+            SportService.generateSportContent(sportService, data as Sport[]);
           }
         });
       }

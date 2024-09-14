@@ -14,6 +14,7 @@
     padding: 20px;
     width: 200px;
     text-align: center;
+    cursor: pointer;
   }
   .addSportForm {
     margin-top: 20px;
@@ -21,8 +22,8 @@
     flex-direction: column;
     align-items: center;
   }
-  .addSportForm input,
-  .addSportForm textarea {
+  .addSportForm .textInput,
+  .addSportForm .textArea {
     margin-bottom: 10px;
     padding: 10px;
     width: 300px;
@@ -40,19 +41,43 @@
   .addSportForm button:hover {
     background-color: #218838;
   }
+  .checkboxContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .checkboxContainer input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+  }
+  .checkboxContainer label {
+    margin: 0;
+    font-size: 16px;
+  }
 </style>
 
 <div class="sportContainer"></div>
 
 <form class="addSportForm">
-    <h2>Add a New Sport</h2>
+    <h2>Add/Edit Sport</h2>
+    <input 
+    type="hidden" 
+    id="sportID" name="SportID">
+    <div class="checkboxContainer">
+        <input
+            type="checkbox"
+            id="isNew" name="IsNew">
+        <label for="isNew">Is New Sport</label>
+    </div>
     <input 
         type="text" placeholder="Sport Name" 
         id="sportName" name="SportName"
+        class="textInput"
         required>
     <textarea 
         placeholder="Notes" 
         id="sportNotes" name="SportNotes"
+        class="textArea"
         required></textarea>
-    <button type="submit">Add Sport</button>
+    <button type="submit">Save Sport</button>
 </form>

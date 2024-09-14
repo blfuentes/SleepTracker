@@ -5,7 +5,6 @@
 module DatabaseService =
 
     open Microsoft.Data.Sqlite
-    open System.Data.SqlClient
     open Dapper.FSharp.SQLite
     open SleepTracker.Models.Entities
 
@@ -23,17 +22,80 @@ module DatabaseService =
             selectAll
         } |> conn.SelectAsync<SportEntity.Sport>
 
-    let createSport (connectionString: string, sport: SportEntity.Sport) =
+    let getSportById (connectionString: string) (sportId: int) =
+        let sportTable = table<SportEntity.Sport>
+        let conn = getConnection(connectionString)
+        conn.Open()
+        let result = 
+            select {
+                for s in sportTable do
+                where (s.SportID = sportId)
+                selectAll
+            } 
+            |> conn.SelectAsync<SportEntity.Sport>
+            |> Async.AwaitTask
+            |> Async.RunSynchronously
+            |> Seq.tryHead
+        result
+
+
+    let createSport (connectionString: string) (sport: SportEntity.Sport) : Option<SportEntity.Sport> =
         let sportTable = table<SportEntity.Sport>
         let conn = getConnection(connectionString)
         conn.Open()
         try
-            let result = 
+            let oldIds = 
+                select {
+                    for s in sportTable do
+                    selectAll
+                } 
+                |> conn.SelectAsync<SportEntity.Sport> 
+                |> Async.AwaitTask 
+                |> Async.RunSynchronously
+                |> Seq.map (fun s -> s.SportID)
+                |> Set.ofSeq
+            let result' = 
                 insert {
                     for s in sportTable do
                     value sport
                     excludeColumn sport.SportID
                 } |> conn.InsertAsync
-            result
+            let newIds = 
+                select {
+                    for s in sportTable do
+                    selectAll
+                }
+                |> conn.SelectAsync<SportEntity.Sport>
+                |> Async.AwaitTask
+                |> Async.RunSynchronously 
+                |> Seq.map (fun s -> s.SportID)
+                |> Set.ofSeq
+            let insertedId = (newIds - oldIds) |> Set.minElement
+            let result = 
+                select {
+                    for s in sportTable do
+                    where (s.SportID = insertedId)
+                }
+                |> conn.SelectAsync<SportEntity.Sport>
+                |> Async.AwaitTask
+                |> Async.RunSynchronously
+                |> Seq.head
+            Some(result)
         with
-            | _ -> System.Threading.Tasks.Task.FromResult(0)
+            | _ -> None
+
+    let updateSport (connectionString: string) (sport: SportEntity.Sport) : Option<SportEntity.Sport> =
+        let sportTable = table<SportEntity.Sport>
+        let conn = getConnection(connectionString)
+        conn.Open()
+        try
+            let result = 
+                update {
+                    for s in sportTable do
+                    setColumn s.SportName sport.SportName
+                    setColumn s.SportNotes sport.SportNotes
+                    where (s.SportID = sport.SportID)
+                } |> conn.UpdateAsync
+            Some(sport)
+        with
+            | _ -> None

@@ -28,7 +28,7 @@ module Program =
             options.AddPolicy("AllowAll", fun builder -> 
                  builder.AllowAnyHeader()
                         .AllowAnyOrigin()
-                        .WithMethods("GET", "POST") |> ignore))
+                        .WithMethods("GET", "POST", "PUT") |> ignore))
             |> ignore
 
 
