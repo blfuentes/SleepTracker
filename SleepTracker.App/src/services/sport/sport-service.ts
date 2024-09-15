@@ -1,3 +1,6 @@
+import { Sport } from "./models/sport";
+import { SportBinding } from "./models/sport-binding";
+
 const sportTemplate = require("../../../assets/templates/sports.html");
 
 class SportService {
@@ -18,6 +21,12 @@ class SportService {
       "addSportForm",
     )[0] as HTMLFormElement;
     formAddSport!.addEventListener("submit", (event) => SaveSport(event, instance.sportsCollection));
+
+    const formSportName = document.getElementById("sportName") as HTMLInputElement;
+    formSportName!.addEventListener("input", () => {
+      const errorContainer = document.getElementById("validationMessage");
+      errorContainer!.style.visibility = "hidden";
+    });
   };
 }
 
@@ -68,6 +77,12 @@ function refreshSport(sportsCollection: SportBinding[], sportId: number) {
   }
 }
 
+function displayError(message: string) {
+  const errorContainer = document.getElementById("validationMessage");
+  errorContainer!.textContent = message;
+  errorContainer!.style.visibility = "visible";
+}
+
 async function SaveSport(event: Event, sportsCollection: SportBinding[]): Promise<void> {
   try {
     event.preventDefault();
@@ -108,7 +123,7 @@ async function SaveSport(event: Event, sportsCollection: SportBinding[]): Promis
       console.error("Failed to save sport");
       switch (response.status) {
         case 409:
-          console.error("Sport already exists");
+          displayError("Sport already exists");
           break;
         default:
           console.error("Unknown error");

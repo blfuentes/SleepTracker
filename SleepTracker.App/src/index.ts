@@ -1,5 +1,6 @@
 import "./app.scss";
 import "./services/sport/models/sport";
+import { Sport } from "./services/sport/models/sport";
 import "./services/sport/models/sport-binding";
 
 import SportService from "./services/sport/sport-service";

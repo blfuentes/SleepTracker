@@ -54,12 +54,18 @@
     margin: 0;
     font-size: 16px;
   }
+  .validationMessage {
+    color: red;
+    margin-bottom: 10px;
+    visibility: collapse;
+  }
 </style>
 
 <div class="sportContainer"></div>
 
 <form class="addSportForm">
     <h2>Add/Edit Sport</h2>
+    <div class="validationMessage" id="validationMessage"></div>
     <input 
     type="hidden" 
     id="sportID" name="SportID">
