@@ -1,2 +1,2 @@
 # SleepTracker
-Sample F# ASP .Net Core WebApp
+F# .net core Application with custom Typescript frontend
