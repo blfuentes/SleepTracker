@@ -17,9 +17,9 @@ jobs:
       with:
         node-version: 23
     - run: npm ci
-      working-directory: .\SleepTracker.App
+      working-directory: ./SleepTracker.App
     - run: npm run build
-      working-directory: .\SleepTracker.App
+      working-directory: ./SleepTracker.App
 
   build-backend:
     name: Builds backend
@@ -32,6 +32,6 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore .\SleepTracker\
+      run: dotnet restore .\SleepTracker\SleepTracker.fsproj
     - name: Build
-      run: dotnet build .\SleepTracker\ --no-restore    
+      run: dotnet build .\SleepTracker\SleepTracker.fsproj --no-restore    
