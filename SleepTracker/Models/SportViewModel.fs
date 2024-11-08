@@ -1,7 +1,7 @@
 ﻿namespace SleepTracker.Models.Entities
 
 type SportViewModel = {
-    SportID : int
+    SportId : int
     SportName : string
     SportNotes : string
 }

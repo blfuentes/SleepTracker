@@ -29,7 +29,7 @@ module DatabaseService =
         let result = 
             select {
                 for s in sportTable do
-                where (s.SportID = sportId)
+                where (s.SportId = sportId)
                 selectAll
             } 
             |> conn.SelectAsync<SportEntity.Sport>
@@ -52,13 +52,13 @@ module DatabaseService =
                 |> conn.SelectAsync<SportEntity.Sport> 
                 |> Async.AwaitTask 
                 |> Async.RunSynchronously
-                |> Seq.map (fun s -> s.SportID)
+                |> Seq.map (fun s -> s.SportId)
                 |> Set.ofSeq
             let result' = 
                 insert {
                     for s in sportTable do
                     value sport
-                    excludeColumn sport.SportID
+                    excludeColumn sport.SportId
                 } |> conn.InsertAsync
             let newIds = 
                 select {
@@ -68,13 +68,13 @@ module DatabaseService =
                 |> conn.SelectAsync<SportEntity.Sport>
                 |> Async.AwaitTask
                 |> Async.RunSynchronously 
-                |> Seq.map (fun s -> s.SportID)
+                |> Seq.map (fun s -> s.SportId)
                 |> Set.ofSeq
             let insertedId = (newIds - oldIds) |> Set.minElement
             let result = 
                 select {
                     for s in sportTable do
-                    where (s.SportID = insertedId)
+                    where (s.SportId = insertedId)
                 }
                 |> conn.SelectAsync<SportEntity.Sport>
                 |> Async.AwaitTask
@@ -94,7 +94,7 @@ module DatabaseService =
                     for s in sportTable do
                     setColumn s.SportName sport.SportName
                     setColumn s.SportNotes sport.SportNotes
-                    where (s.SportID = sport.SportID)
+                    where (s.SportId = sport.SportId)
                 } |> conn.UpdateAsync
             Some(sport)
         with

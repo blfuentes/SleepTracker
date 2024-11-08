@@ -3,7 +3,7 @@
 module SportEntity =
 
     type Sport = {
-        SportID : int
+        SportId : int
         SportName : string
         SportNotes : string
     }

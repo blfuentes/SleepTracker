@@ -1,7 +1,12 @@
 import { Sport } from "./models/sport";
 import { SportBinding } from "./models/sport-binding";
+import { BindingElement } from "../common/binding-element";
 
 const sportTemplate = require("../../../assets/templates/sports.html");
+
+const SportId = "sportId";
+const SportName = "sportName";
+const SportNotes = "sportNotes";
 
 class SportService {
   
@@ -22,7 +27,7 @@ class SportService {
     )[0] as HTMLFormElement;
     formAddSport!.addEventListener("submit", (event) => SaveSport(event, instance.sportsCollection));
 
-    const formSportName = document.getElementById("sportName") as HTMLInputElement;
+    const formSportName = document.getElementById(SportName) as HTMLInputElement;
     formSportName!.addEventListener("input", () => {
       const errorContainer = document.getElementById("validationMessage");
       errorContainer!.style.visibility = "hidden";
@@ -41,19 +46,24 @@ function buildSport(sportsCollection: SportBinding[], sportContainer: Element, s
   sportElementNotes.textContent = sport.sportNotes;
   sportElement.appendChild(sportElementNotes);
 
-  const tBindings = new Map<string, HTMLElement>();
-  tBindings.set("sportID", document.getElementById("sportID") as HTMLInputElement);
-  tBindings.set("sportName", document.getElementById("sportName") as HTMLInputElement);
-  tBindings.set("sportNotes", document.getElementById("sportNotes") as HTMLTextAreaElement);
+  const tBindings = new Map<string, BindingElement>();
+  tBindings.set(SportId, new BindingElement(document.getElementById(SportId) as HTMLElement));
+  tBindings.set(SportName, new BindingElement(document.getElementById(SportName) as HTMLElement));
+  tBindings.set(SportNotes, new BindingElement(document.getElementById(SportNotes) as HTMLElement));
 
-  const sBindings = new Map<string, HTMLElement>();
-  sBindings.set("sportName", sportName);
-  sBindings.set("sportNotes", sportElementNotes);
+  const sBindings = new Map<string, BindingElement>();
+  sBindings.set(SportName, new BindingElement(sportName));
+  sBindings.set(SportNotes, new BindingElement(sportElementNotes));
 
-  sportsCollection.push({ sport: sport, targetBindings: tBindings, sourceBindings: sBindings });
+  const sportBinding = new SportBinding();
+  sportBinding.sport = sport;
+  sportBinding.targetBindings = tBindings;
+  sportBinding.sourceBindings = sBindings;
+
+  sportsCollection.push(sportBinding);
 
   sportElement.addEventListener("click", () => {
-    loadSport(sportsCollection, sport.sportID);
+    loadSport(sportsCollection, sport.sportId);
   });
 
   // Add the sportElement to the sportContainer
@@ -61,19 +71,16 @@ function buildSport(sportsCollection: SportBinding[], sportContainer: Element, s
 }
 
 function loadSport(sportsCollection: SportBinding[], sportId: number) {
-  let sportBinding = sportsCollection.find((x) => x.sport.sportID === sportId);
+  let sportBinding = sportsCollection.find((x) => x.sport.sportId === sportId);
   if (sportBinding) {
-    (sportBinding.targetBindings.get("sportID") as any).value = sportBinding.sport.sportID.toString();
-    (sportBinding.targetBindings.get("sportName") as any).value = sportBinding.sport.sportName;
-    (sportBinding.targetBindings.get("sportNotes") as any).value = sportBinding.sport.sportNotes;
+    sportBinding.LoadBindings();
   }
 }
 
 function refreshSport(sportsCollection: SportBinding[], sportId: number) {
-  let sportBinding = sportsCollection.find((x) => x.sport.sportID === sportId);
+  let sportBinding = sportsCollection.find((x) => x.sport.sportId === sportId);
   if (sportBinding) {
-    (sportBinding.sourceBindings.get("sportName") as any).textContent = sportBinding.sport.sportName;
-    (sportBinding.sourceBindings.get("sportNotes") as any).textContent = sportBinding.sport.sportNotes;
+    sportBinding.RefreshBindings();
   }
 }
 
@@ -93,7 +100,7 @@ async function SaveSport(event: Event, sportsCollection: SportBinding[]): Promis
 
     const isUpdate = formData.get("IsNew") !== 'on';
 
-    const url = isUpdate ? process.env.API_URL + "/sport/" + formData.get("SportID") : process.env.API_URL + "/sport";
+    const url = isUpdate ? process.env.API_URL + "/sport/" + formData.get("SportId") : process.env.API_URL + "/sport";
     const response = await fetch(url, {
       method: isUpdate ? "PUT" : "POST",
       headers: {
@@ -110,14 +117,16 @@ async function SaveSport(event: Event, sportsCollection: SportBinding[]): Promis
       if (isUpdate) {
         // replace the sport in the collection
         sportsCollection.forEach((element) => {
-          if (element.sport.sportID === sport.sportID) {
+          if (element.sport.sportId === sport.sportId) {
             element.sport = sport;
           }
         });
-        refreshSport(sportsCollection, sport.sportID);
+        refreshSport(sportsCollection, sport.sportId);
       } else {
         buildSport(sportsCollection, sportContainer, sport);
+        loadSport(sportsCollection, sport.sportId);
         (document.getElementById("isNew") as HTMLInputElement).checked = false;
+        
       }
     } else {
       console.error("Failed to save sport");

@@ -1,49 +1,49 @@
 ﻿-- Table definitions
 -- SPORT
 CREATE TABLE Sport (
-	SportID INTEGER PRIMARY KEY,
+	SportId INTEGER PRIMARY KEY,
 	SportName VARCHAR(255) NOT NULL,
 	SportNotes VARCHAR(255)
 );
 -- insert values into Sport
-INSERT INTO Sport (SportID, SportName, SportNotes)
+INSERT INTO Sport (SportId, SportName, SportNotes)
 VALUES (NULL, 'Walking', '1h/225kcal'), (NULL, 'Swimming', '1h/449kcal'), (NULL, 'Gym', '1h/670kcal');
 
 -- SLEEP QUALITY
 CREATE TABLE SleepQuality (
-	SleepQualityID INTEGER PRIMARY KEY,
+	SleepQualityId INTEGER PRIMARY KEY,
 	SleepQualityName VARCHAR(255) NOT NULL
 );
 -- insert values into SleepQuality
-INSERT INTO SleepQuality (SleepQualityID, SleepQualityName)
+INSERT INTO SleepQuality (SleepQualityId, SleepQualityName)
 VALUES (NULL, 'Bad'), (NULL, 'Cannot fall asleep'), (NULL, 'Good');
 
 -- DRUG
 CREATE TABLE Drug (
-	DrugID INTEGER PRIMARY KEY,
+	DrugId INTEGER PRIMARY KEY,
 	DrugName VARCHAR(255) NOT NULL,
 	DrugNotes VARCHAR(255)
 );
 -- insert values into Drug
-INSERT INTO Drug (DrugID, DrugName, DrugNotes)
+INSERT INTO Drug (DrugId, DrugName, DrugNotes)
 VALUES (NULL, 'Topiramato', 'Migraña');
 
 -- SLEEP
 CREATE TABLE Sleep (
-	SleepID INTEGER PRIMARY KEY,
+	SleepId INTEGER PRIMARY KEY,
 	SleepDate DATE NOT NULL,
 	BedTime TIME NOT NULL,
 	SleepTime TIME NOT NULL,
 	NumberOfAwakenings INT NOT NULL,
 	WakeTime TIME NOT NULL,
-	SportID INT NOT NULL,
-	SleepQualityID INT NOT NULL,
-	DrugID INT,
+	SportId INT NOT NULL,
+	SleepQualityId INT NOT NULL,
+	DrugId INT,
 	SleepNotes VARCHAR(255),
-	FOREIGN KEY(SportID)
-		REFERENCES Sport(SportID),
-	FOREIGN KEY(SleepQualityID)
-		REFERENCES SleepQuality(SleepQualityID),
-	FOREIGN KEY(DrugID)
-		REFERENCES Drug(DrugID)
+	FOREIGN KEY(SportId)
+		REFERENCES Sport(SportId),
+	FOREIGN KEY(SleepQualityId)
+		REFERENCES SleepQuality(SleepQualityId),
+	FOREIGN KEY(DrugId)
+		REFERENCES Drug(DrugId)
 );

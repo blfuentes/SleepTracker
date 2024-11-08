@@ -24,7 +24,7 @@ type SportController (logger : ILogger<SportController>, configuration: IConfigu
                 let! tmpSports = DatabaseService.getSports(this.ConnString) |> Async.AwaitTask
                 return tmpSports
             } |> Async.RunSynchronously
-        sports |> Seq.map(fun s -> { SportID = s.SportID; SportName = s.SportName; SportNotes = s.SportNotes })
+        sports |> Seq.map(fun s -> { SportId = s.SportId; SportName = s.SportName; SportNotes = s.SportNotes })
 
     [<HttpPost>]
     member this.Create() =
@@ -40,7 +40,7 @@ type SportController (logger : ILogger<SportController>, configuration: IConfigu
             match sport with
             | Some _ -> this.Conflict()
             | None ->
-                let newSport : SportEntity.Sport = { SportID = 0; SportName = (this.Request.Form["SportName"] |> Seq.head); SportNotes = (this.Request.Form["SportNotes"] |> Seq.head) }
+                let newSport : SportEntity.Sport = { SportId = 0; SportName = (this.Request.Form["SportName"] |> Seq.head); SportNotes = (this.Request.Form["SportNotes"] |> Seq.head) }
                 let result = DatabaseService.createSport (this.ConnString)  newSport
                 match result with
                 | Some sport -> this.Created("", sport) :> ActionResult
