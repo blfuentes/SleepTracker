@@ -35,6 +35,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore ./SleepTracker.fsproj
+      run: dotnet restore SleepTracker.fsproj
+      working-directory: ./SleepTracker
     - name: Build
-      run: dotnet build ./SleepTracker.fsproj --no-restore    
+      run: dotnet build SleepTracker.fsproj --no-restore    
+      working-directory: ./SleepTracker
