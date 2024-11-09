@@ -1,11 +1,21 @@
 namespace SleepTracker
 
+open System
+
+
 #nowarn "20"
 
+open Microsoft.EntityFrameworkCore.Migrations.Internal
 open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
+open System.IO 
+open Microsoft.AspNetCore.Builder
+open Microsoft.Extensions.DependencyInjection
+open Microsoft.Extensions.Hosting
+open Microsoft.EntityFrameworkCore
+open Microsoft.AspNetCore.Identity 
 
 open SleepTracker.Services
 
@@ -17,11 +27,35 @@ module Program =
         Dapper.FSharp.MSSQL.OptionTypes.register()
 
         let builder = WebApplication.CreateBuilder(args)
-        builder.WebHost.ConfigureAppConfiguration(fun builderContext config -> 
+        builder.WebHost
+            .ConfigureAppConfiguration(fun builderContext config -> 
                             config.AddJsonFile(sprintf "appsettings.%s.json" builderContext.HostingEnvironment.EnvironmentName, optional = false, reloadOnChange = true)
                             config.AddUserSecrets()
-                            config.AddEnvironmentVariables() |> ignore)
+                            config.AddEnvironmentVariables()
+                            |> ignore)
 
+        builder.Services
+            .AddDbContext<ApplicationDbContext.ApplicationDbContext>(fun options -> 
+                options
+                    .UseSqlite("Data Source=./Data/Identity.db") |> ignore)
+
+        // IdentityUser, IdentityRole from MS.ASP.Identity
+        builder.Services.AddIdentity<IdentityUser, IdentityRole>(fun options -> 
+                options.Password.RequireLowercase <- true
+                options.Password.RequireUppercase <- true
+                options.Password.RequireDigit <- true
+                options.Lockout.MaxFailedAccessAttempts <- 5
+                options.Lockout.DefaultLockoutTimeSpan <- TimeSpan.FromMinutes(15)
+                options.User.RequireUniqueEmail <- true
+                // enable this if we use email verification 
+                // options.SignIn.RequireConfirmedEmail <- true;
+                )
+            // tell asp.net identity to use the above store
+            .AddEntityFrameworkStores<ApplicationDbContext.ApplicationDbContext>()
+            .AddDefaultTokenProviders() // need for email verification token generation
+            |> ignore
+        //builder.Services.AddIdentityCore<IdentityUser>(fun options -> options.SignIn.RequireConfirmedAccount <- true) |> ignore
+        
         builder.Services.AddControllers()
 
         builder.Services.AddCors(fun options -> 
@@ -44,6 +78,7 @@ module Program =
 
         app.UseStaticFiles()
         app.UseRouting()
+        app.UseAuthentication()
         app.UseAuthorization()
 
         // Use Endpoints

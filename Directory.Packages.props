@@ -1,16 +1,26 @@
 <Project>
-  <PropertyGroup>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageVersion Include="Dapper" Version="2.1.35" />
-    <PackageVersion Include="Dapper.FSharp" Version="4.9.0" />
-    <PackageVersion Include="FSharp.Core" Version="8.0.401" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.10" />
-    <PackageVersion Include="Microsoft.Data.Sqlite" Version="8.0.10" />
-    <PackageVersion Include="Microsoft.Data.Sqlite.Core" Version="8.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
-    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-    <PackageVersion Include="System.Data.SqlClient" Version="4.8.6" />
-  </ItemGroup>
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageVersion Include="Dapper" Version="2.1.35" />
+		<PackageVersion Include="Dapper.FSharp" Version="4.9.0" />
+		<PackageVersion Include="EntityFrameworkCore.FSharp" Version="6.0.7" />
+		<PackageVersion Include="FSharp.Core" Version="8.0.401" />
+		<PackageVersion Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
+		<PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.10" />
+		<PackageVersion Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+		<PackageVersion Include="Microsoft.Data.Sqlite.Core" Version="8.0.10" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageVersion>
+		<PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
+		<PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+		<PackageVersion Include="System.Data.SqlClient" Version="4.8.6" />
+	</ItemGroup>
 </Project>
