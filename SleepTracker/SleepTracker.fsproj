@@ -23,15 +23,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dapper" />
-		<PackageReference Include="Dapper.FSharp" />
-		<PackageReference Include="FSharp.Core" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
-		<PackageReference Include="Microsoft.Data.Sqlite" />
-		<PackageReference Include="Microsoft.Data.Sqlite.Core" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
-		<PackageReference Include="System.Data.SqlClient" />
+	  <PackageReference Include="Dapper.FSharp" />
+	  <PackageReference Include="Microsoft.Data.Sqlite" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\SleepTracker.IdentityLibrary\SleepTracker.IdentityLibrary.csproj" />
 	</ItemGroup>
 
 </Project>
