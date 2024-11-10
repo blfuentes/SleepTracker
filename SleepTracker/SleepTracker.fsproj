@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<None Include="Data\setup.sql" />
+		<None Include="Dockerfile" />
 		<Compile Include="Utils\ExtensionMethods.fs" />
 		<Compile Include="Models\Entities\Sport.fs" />
 		<Compile Include="Models/ErrorViewModel.fs" />
@@ -19,13 +20,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="Dockerfile" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <PackageReference Include="Dapper.FSharp" />
 	  <PackageReference Include="Microsoft.Data.Sqlite" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
 	</ItemGroup>
 
 	<ItemGroup>

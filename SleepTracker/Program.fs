@@ -36,7 +36,7 @@ module Program =
         builder.Services
             .AddDbContext<ApplicationDbContext>(fun options -> 
                 options
-                    .UseSqlite("Data Source=../SleepTracker.IdentityLibrary/Data/Identity.db") |> ignore)
+                    .UseSqlite("Data Source=./Data/Identity.db") |> ignore)
 
         // IdentityUser, IdentityRole from MS.ASP.Identity
         builder.Services.AddIdentity<IdentityUser, IdentityRole>(fun options -> 

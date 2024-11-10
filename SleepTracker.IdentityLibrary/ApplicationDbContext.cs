@@ -21,7 +21,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         if (!optionsBuilder.IsConfigured)
         {
             optionsBuilder
-                .UseSqlite("Data Source=./Data/Identity.db",
+                .UseSqlite("Data Source=../SleepTracker/Data/Identity.db",
                 b => b.MigrationsAssembly("SleepTracker.IdentityMigrations"));
         }
     }
