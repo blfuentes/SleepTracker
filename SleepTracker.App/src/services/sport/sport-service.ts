@@ -100,7 +100,7 @@ async function SaveSport(event: Event, sportsCollection: SportBinding[]): Promis
 
     const isUpdate = formData.get("IsNew") !== 'on';
 
-    const url = isUpdate ? process.env.API_URL + "/sport/" + formData.get("SportId") : process.env.API_URL + "/sport";
+    const url = isUpdate ? process.env.API_URL + "/api/sports/" + formData.get("SportId") : process.env.API_URL + "/api/sports";
     const response = await fetch(url, {
       method: isUpdate ? "PUT" : "POST",
       headers: {

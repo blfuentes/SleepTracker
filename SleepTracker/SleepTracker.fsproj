@@ -10,17 +10,22 @@
 		<None Include="Data\setup.sql" />
 		<None Include="Dockerfile" />
 		<Compile Include="Utils\ExtensionMethods.fs" />
+		<Compile Include="Models\Account\TokenResponse.fs" />
+		<Compile Include="Models\Account\LoginModel.fs" />
+		<Compile Include="Models\Account\RegisterModel.fs" />
 		<Compile Include="Models\Entities\Sport.fs" />
 		<Compile Include="Models/ErrorViewModel.fs" />
 		<Compile Include="Models\SportViewModel.fs" />
 		<Compile Include="Services\DatabaseInitializer.fs" />
 		<Compile Include="Services\DatabaseService.fs" />
-		<Compile Include="Controllers\SportController.fs" />
+		<Compile Include="Controllers\AuthController.fs" />
+		<Compile Include="Controllers\SportsController.fs" />
 		<Compile Include="Program.fs" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="Dapper.FSharp" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
 	  <PackageReference Include="Microsoft.Data.Sqlite" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
 	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />

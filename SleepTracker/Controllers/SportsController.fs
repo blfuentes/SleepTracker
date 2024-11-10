@@ -9,10 +9,11 @@ open SleepTracker.Models
 open SleepTracker.Services
 open SleepTracker.Models.Entities
 open Microsoft.Extensions.Configuration
+open Microsoft.AspNetCore.Authorization
 
 [<ApiController>]
-[<Route("[controller]")>]
-type SportController (logger : ILogger<SportController>, configuration: IConfiguration) =
+[<Route("api/[controller]")>]
+type SportsController (logger : ILogger<SportsController>, configuration: IConfiguration) =
     inherit ControllerBase()
 
     member this.ConnString = configuration.GetConnectionString(DatabaseService.ConnectionName)
@@ -27,6 +28,7 @@ type SportController (logger : ILogger<SportController>, configuration: IConfigu
         sports |> Seq.map(fun s -> { SportId = s.SportId; SportName = s.SportName; SportNotes = s.SportNotes })
 
     [<HttpPost>]
+    [<Authorize>]
     member this.Create() =
         if not (this.ModelState.IsValid) then
             this.BadRequest() :> ActionResult

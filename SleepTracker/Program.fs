@@ -1,20 +1,15 @@
 namespace SleepTracker
 
-open System
-
-
 #nowarn "20"
 
+open Microsoft.AspNetCore.Authentication.JwtBearer
+open System.Text
+open Microsoft.IdentityModel.Tokens
 open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
-open System.IO 
-open Microsoft.AspNetCore.Builder
-open Microsoft.Extensions.DependencyInjection
-open Microsoft.Extensions.Hosting
 open Microsoft.AspNetCore.Identity 
-open Microsoft.EntityFrameworkCore.Sqlite
 open Microsoft.EntityFrameworkCore
 
 open SleepTracker.IdentityLibrary
@@ -33,26 +28,48 @@ module Program =
                             config.AddUserSecrets()
                             config.AddEnvironmentVariables() |> ignore)
 
+        builder.Services.AddHttpContextAccessor()
+
+        builder.Services.AddAuthorization()
+
+        // Configure JWT Authentication
+        let key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+        builder.Services.AddAuthentication(fun options ->
+                // Disable cookie authentication
+                options.DefaultScheme <- JwtBearerDefaults.AuthenticationScheme
+                options.DefaultChallengeScheme <- JwtBearerDefaults.AuthenticationScheme
+                options.RequireAuthenticatedSignIn <- false
+            )
+            .AddJwtBearer(fun options ->
+                options.SaveToken = true
+                options.TokenValidationParameters <- TokenValidationParameters(
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                )
+                options.Events <- JwtBearerEvents(
+                    OnChallenge = fun context ->
+                        // Override the default challenge behavior to return 401 Unauthorized
+                        context.Response.StatusCode <- 401
+                        context.Response.ContentType <- "application/json"
+                        task {
+                            // Create a stream writer and write the response
+                            use writer = new System.IO.StreamWriter(context.Response.Body)
+                            do! writer.WriteAsync("{\"message\":\"Unauthorized\"}")
+                            do! writer.FlushAsync() // Ensure content is sent
+                        }
+                ))
+
         builder.Services
             .AddDbContext<ApplicationDbContext>(fun options -> 
                 options
                     .UseSqlite("Data Source=./Data/Identity.db") |> ignore)
 
-        // IdentityUser, IdentityRole from MS.ASP.Identity
-        builder.Services.AddIdentity<IdentityUser, IdentityRole>(fun options -> 
-                options.Password.RequireLowercase <- true
-                options.Password.RequireUppercase <- true
-                options.Password.RequireDigit <- true
-                options.Lockout.MaxFailedAccessAttempts <- 5
-                options.Lockout.DefaultLockoutTimeSpan <- TimeSpan.FromMinutes(15)
-                options.User.RequireUniqueEmail <- true
-                // enable this if we use email verification 
-                // options.SignIn.RequireConfirmedEmail <- true;
-                )
-            // tell asp.net identity to use the above store
+        builder.Services
+            .AddIdentity<IdentityUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders() // need for email verification token generation
-            |> ignore
+            .AddDefaultTokenProviders()
 
         builder.Services.AddControllers()
 
@@ -62,7 +79,6 @@ module Program =
                         .AllowAnyOrigin()
                         .WithMethods("GET", "POST", "PUT") |> ignore))
             |> ignore
-
 
         let app = builder.Build()
 
@@ -79,12 +95,10 @@ module Program =
         app.UseAuthentication()
         app.UseAuthorization()
 
-        // Use Endpoints
         app.UseEndpoints(fun endpoints ->
             endpoints.MapControllers() |> ignore
-            // Add other endpoint mappings as needed
         ) |> ignore
-        
+
         // Verify if the database is created
         let connectionString = app.Configuration.GetConnectionString("SqliteConnection")
         DatabaseService.getConnection(connectionString) |> DatabaseInitializer.safeInit
