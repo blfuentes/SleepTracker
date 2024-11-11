@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 17
+# Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SleepTracker", "SleepTracker\SleepTracker.fsproj", "{8AD4D019-301E-4428-B99E-272E614265A8}"
@@ -9,13 +9,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		Directory.Packages.props = Directory.Packages.props
+		.config\dotnet-tools.json = .config\dotnet-tools.json
 	EndProjectSection
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SleepTracker-DB", "SleepTracker-DB\SleepTracker-DB.sqlproj", "{434178ED-2EC7-4293-9297-280B4734D4A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepTracker.IdentityLibrary", "SleepTracker.IdentityLibrary\SleepTracker.IdentityLibrary.csproj", "{96394237-593C-47C9-9799-FD286728EC74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SleepTracker.IdentityLibrary", "SleepTracker.IdentityLibrary\SleepTracker.IdentityLibrary.csproj", "{96394237-593C-47C9-9799-FD286728EC74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepTracker.IdentityMigrations", "SleepTracker.IdentityMigrations\SleepTracker.IdentityMigrations.csproj", "{41160419-E7F6-41FD-8914-F8811DBB5EAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SleepTracker.IdentityMigrations", "SleepTracker.IdentityMigrations\SleepTracker.IdentityMigrations.csproj", "{41160419-E7F6-41FD-8914-F8811DBB5EAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

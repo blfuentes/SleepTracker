@@ -30,6 +30,11 @@ module Program =
 
         builder.Services.AddHttpContextAccessor()
 
+        builder.Services
+            .AddIdentity<IdentityUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders()
+
         builder.Services.AddAuthorization()
 
         // Configure JWT Authentication
@@ -65,11 +70,6 @@ module Program =
             .AddDbContext<ApplicationDbContext>(fun options -> 
                 options
                     .UseSqlite("Data Source=./Data/Identity.db") |> ignore)
-
-        builder.Services
-            .AddIdentity<IdentityUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders()
 
         builder.Services.AddControllers()
 
