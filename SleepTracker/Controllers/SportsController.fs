@@ -21,10 +21,9 @@ type SportsController (logger : ILogger<SportsController>, configuration: IConfi
     [<HttpGet>]
     member this.GetAll () =
         let sports = 
-            async {
-                let! tmpSports = DatabaseService.getSports(this.ConnString) |> Async.AwaitTask
-                return tmpSports
-            } |> Async.RunSynchronously
+            DatabaseService.getSports(this.ConnString) 
+            |> Async.AwaitTask
+            |> Async.RunSynchronously
         sports |> Seq.map(fun s -> { SportId = s.SportId; SportName = s.SportName; SportNotes = s.SportNotes })
 
     [<HttpPost>]
@@ -34,10 +33,9 @@ type SportsController (logger : ILogger<SportsController>, configuration: IConfi
             this.BadRequest() :> ActionResult
         else
             let existingSports = 
-                async {
-                    let! tmpSports = DatabaseService.getSports(this.ConnString) |> Async.AwaitTask
-                    return tmpSports
-                } |> Async.RunSynchronously
+                DatabaseService.getSports(this.ConnString) 
+                |> Async.AwaitTask
+                |> Async.RunSynchronously
             let sport = existingSports |> Seq.tryFind (fun s -> s.SportName = (this.Request.Form["SportName"] |> Seq.head))
             match sport with
             | Some _ -> this.Conflict()
