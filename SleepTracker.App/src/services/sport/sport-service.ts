@@ -22,9 +22,9 @@ class SportService {
       buildSport(instance.sportsCollection, sportContainer, sport);
     });
 
-    const formAddSport = document.getElementsByClassName(
+    const formAddSport = document.getElementById(
       "addSportForm",
-    )[0] as HTMLFormElement;
+    ) as HTMLFormElement;
     formAddSport!.addEventListener("submit", (event) => SaveSport(event, instance.sportsCollection));
 
     const formSportName = document.getElementById(SportName) as HTMLInputElement;

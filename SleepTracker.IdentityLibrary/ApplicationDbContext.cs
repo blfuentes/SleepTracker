@@ -22,7 +22,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         {
             optionsBuilder
                 .UseSqlite("Data Source=../SleepTracker/Data/Identity.db",
-                b => b.MigrationsAssembly("SleepTracker.IdentityMigrations"));
+                b => b.MigrationsAssembly("SleepTracker.IdentityMigrations"))
+                .ConfigureWarnings(options =>
+                {
+                    options.Log(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning);
+                });
         }
     }
 }

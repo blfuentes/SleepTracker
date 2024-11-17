@@ -1,0 +1,33 @@
+<form id="loginOrRegisterForm" class="defaultForm">
+  <h2>Login</h2>
+  <div class="validationMessage" id="validationMessage"></div>
+  <div class="checkboxContainer">
+    <input type="checkbox" id="existingAccount" name="ExistingAccount" />
+    <label for="existingAccount">I have an account</label>
+  </div>
+  <input
+    type="text"
+    placeholder="Email"
+    id="email"
+    name="Email"
+    class="textInput"
+    required
+  />
+  <input
+    type="password"
+    placeholder="Password"
+    id="password"
+    name="Password"
+    class="textInput"
+    required
+  />
+  <input
+    type="password"
+    placeholder="Confirm password"
+    id="confirmPassword"
+    name="ConfirmPassword"
+    class="textInput"
+    required
+  />
+  <button type="submit">Login / Register</button>
+</form>

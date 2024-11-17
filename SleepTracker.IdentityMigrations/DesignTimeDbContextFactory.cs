@@ -16,7 +16,13 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<Applicatio
         var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        builder.UseSqlite(connectionString, b => b.MigrationsAssembly("SleepTracker.IdentityMigrations"));
+        builder.UseSqlite(
+            connectionString,
+            b => b.MigrationsAssembly("SleepTracker.IdentityMigrations"))
+            .ConfigureWarnings(options =>
+            {
+                options.Log(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning);
+            });
 
         return new ApplicationDbContext(builder.Options);
     }

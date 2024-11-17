@@ -11,14 +11,14 @@ using SleepTracker.IdentityLibrary;
 namespace SleepTracker.IdentityMigrations.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241109200424_InitialCreate")]
+    [Migration("20241117192900_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -44,6 +44,18 @@ namespace SleepTracker.IdentityMigrations.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "8dd7c2b5-f00c-4347-94ca-6cd769afbef9",
+                            Name = "admin"
+                        },
+                        new
+                        {
+                            Id = "afbf7997-ec3f-4b8d-9878-c9656f3c5378",
+                            Name = "user"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
