@@ -10,6 +10,7 @@
 		<None Include="Data\setup.sql" />
 		<None Include="Dockerfile" />
 		<Compile Include="Utils\ExtensionMethods.fs" />
+		<Compile Include="Models\Account\IdentityIssue.fs" />
 		<Compile Include="Models\Account\TokenResponse.fs" />
 		<Compile Include="Models\Account\LoginModel.fs" />
 		<Compile Include="Models\Account\RegisterModel.fs" />

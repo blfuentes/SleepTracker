@@ -29,7 +29,7 @@ type AuthController (
     member this.Register([<FromBody>] model: RegisterModel) : Task<IActionResult> =
         task {
             if model.Password <> model.ConfirmPassword then
-                return this.BadRequest("Passwords do not match") :> IActionResult
+                return this.BadRequest([{ Code = "Password"; Description = "Passwords do not match" }]) :> IActionResult
             else
                 let user = new IdentityUser(UserName = model.Email, Email = model.Email)
                 let! result = userManager.CreateAsync(user, model.Password)

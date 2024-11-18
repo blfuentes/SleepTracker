@@ -1,3 +1,26 @@
+<style>
+  /* Welcome Title */
+  .welcome-title {
+    font-size: 3rem; /* Large, impactful title */
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px; /* Adds a modern feel */
+  }
+
+  /* Style the dynamic user name, if needed */
+  #welcome-container #user-name {
+    color: #ffdd57; /* Optional: Highlight the name */
+    font-weight: bold; /* Optional: Make the name stand out */
+  }
+</style>
+
+<div class="welcome-container">
+  <h1 class="welcome-title">Welcome, <span id="user-name"></span>!</h1>
+  <p class="welcome-message">
+    We are thrilled to have you here. Explore and enjoy your journey!
+  </p>
+</div>
+
 <form id="loginOrRegisterForm" class="defaultForm">
   <h2>Login</h2>
   <div class="validationMessage" id="validationMessage"></div>

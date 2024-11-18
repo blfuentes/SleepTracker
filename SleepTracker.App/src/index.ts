@@ -14,27 +14,27 @@ async function main(): Promise<void> {
   const links = [...navbar.getElementsByTagName("a")];
   const sportService = new SportService();
   const authService = new AuthService();
-  currentUser = { email: "", token: "", isAuthenticated: false }
 
-  AuthService.generateSportContent(authService, currentUser);
+  AuthService.generateLoginContent(authService);
 
   links.forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
       const href = link.getAttribute("href");
       if (href) {
-        loadData(href.replace("#", "/api/")).then((data) => {
-          if (!data) {
-            console.log("No data found");
-            return;
-          }
-          if (href === "#sports") {
-            SportService.generateSportContent(sportService, data as Sport[]);
-          }
-          if (href === "#home") {
-            AuthService.generateSportContent(authService, currentUser);
-          }
-        });
+        if (href === "#home") {
+          AuthService.generateLoginContent(authService);
+        } else {
+          loadData(href.replace("#", "/api/")).then((data) => {
+            if (!data) {
+              console.log("No data found");
+              return;
+            }
+            if (href === "#sports") {
+              SportService.generateSportContent(sportService, data as Sport[]);
+            }
+          });
+        }
       }
     });
   });

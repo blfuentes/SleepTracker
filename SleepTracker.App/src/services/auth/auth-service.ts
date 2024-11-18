@@ -2,6 +2,7 @@ import { BindingElement } from "../common/binding-element";
 import { ValidationIssue } from "../common/validation-issue";
 import { Login } from "./models/login";
 import { LoginBinding } from "./models/login-binding";
+import { TokenResponse } from "./models/token-response";
 import { User } from "./models/user";
 
 const authTemplate = require("../../../assets/templates/login.html");
@@ -9,9 +10,10 @@ const authTemplate = require("../../../assets/templates/login.html");
 const Email = "email";
 const Password = "password";
 const ConfirmPassword = "confirmPassword";
+const UserData = "UserData";
 
 class AuthService {
-  static generateSportContent(instance: AuthService, user: User) {
+  static generateLoginContent(instance: AuthService) {
     const apiResponseContainer = document.getElementById("content");
     const template = authTemplate.default;
     apiResponseContainer!.innerHTML = template;
@@ -20,14 +22,36 @@ class AuthService {
       "loginOrRegisterForm",
     ) as HTMLFormElement;
 
-    if (user.isAuthenticated) {
+    const welcomeContainer = document.getElementsByClassName(
+      "welcome-container",
+    )[0] as HTMLDivElement;
+
+    let currentUser : User | undefined | null = undefined;
+    let userData = sessionStorage.getItem(UserData);
+
+    if (userData) {
+      currentUser = JSON.parse(userData) as User;
+    }
+
+    if (currentUser && currentUser.isAuthenticated) {
       formAddSport.style.visibility = "hidden";
+      welcomeContainer.style.visibility = "visible";
+      updateHome(currentUser);
     } else {
+      formAddSport.style.visibility = "visible";
+      welcomeContainer.style.visibility = "hidden";
+
       let confirmPasswordInput = document.getElementById("confirmPassword");
       let isLoginCheck = document.getElementById("existingAccount") as HTMLInputElement;
       isLoginCheck!.addEventListener("change", (event) => 
       {
         confirmPasswordInput!.style.visibility = isLoginCheck.checked ? "hidden" : "visible";
+        const confirmPassword = document.getElementById("confirmPassword") as HTMLInputElement;
+        if (isLoginCheck.checked) {
+          confirmPassword?.removeAttribute("required");
+        } else {
+          confirmPassword.required = true;
+        }
       });
       formAddSport!.addEventListener("submit", (event) =>
         LoginOrRegister(event),
@@ -49,8 +73,6 @@ async function LoginOrRegister(event: Event): Promise<void> {
     const formData = new FormData(form);
     const formObject = Object.fromEntries(formData.entries());
     const jsonPayload = JSON.stringify(formObject);
-    // const urlEncodedData = new URLSearchParams(formData as any).toString();
-
     const isRegister = formData.get("ExistingAccount") !== 'on';
 
     const url = process.env.API_URL + (isRegister ? "/api/auth/register" :  "/api/auth/login");
@@ -64,8 +86,11 @@ async function LoginOrRegister(event: Event): Promise<void> {
     
     if (response.ok) {
       console.log(`${isRegister ? "Register" : "Logged"} successfully`);
-      const tokenResponse = await response.json();
-      console.log(tokenResponse);
+      clearErrors();
+      const tokenResponse = await response.json() as TokenResponse;
+      const currentUser : User = { email: formData.get('Email')!.toString(), isAuthenticated: true };
+      storeSession(tokenResponse, currentUser);
+      updateHome(currentUser);
     } else {
         console.error("Failed to register sport");
         switch (response.status) {
@@ -83,6 +108,26 @@ async function LoginOrRegister(event: Event): Promise<void> {
   } catch(error) {
 
   }
+}
+
+function storeSession(sessionData: TokenResponse, user: User) {
+  sessionStorage.setItem("AccessToken", sessionData.accessToken);
+  sessionStorage.setItem("ExpiresIn", sessionData.expiresIn.toString());
+  sessionStorage.setItem("RefreshToken", sessionData.refreshToken);
+  sessionStorage.setItem("TokenType", sessionData.tokenType);
+
+  sessionStorage.setItem(UserData, JSON.stringify(user));
+}
+
+function updateHome(user: User) {
+  const contentContainer = document.getElementById("user-name");
+  contentContainer!.textContent = user.email;
+}
+
+function clearErrors() {
+  const errorContainer = document.getElementById("validationMessage");
+  errorContainer!.textContent = "";
+  errorContainer!.style.visibility = "visible"; 
 }
 
 function displayError(message: string) {

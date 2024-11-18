@@ -2,10 +2,7 @@
 
 
 module DatabaseInitializer =
-    open Dapper.FSharp
     open System.Data
-    open Microsoft.Data.Sqlite
-    open Microsoft.Extensions.Configuration
     open SleepTracker.Utils.ExtensionMethods
 
     let mutable isAlreadyInitialized = false

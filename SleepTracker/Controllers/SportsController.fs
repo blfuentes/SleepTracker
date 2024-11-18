@@ -1,11 +1,9 @@
 ﻿namespace SleepTracker.Controllers
 
-open System.Diagnostics
 
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
 
-open SleepTracker.Models
 open SleepTracker.Services
 open SleepTracker.Models.Entities
 open Microsoft.Extensions.Configuration
