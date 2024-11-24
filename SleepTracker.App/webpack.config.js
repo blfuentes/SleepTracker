@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
+const { DefinePlugin } = require("webpack");
 const Dotenv = require('dotenv-webpack');
 const path = require("path");
 
@@ -61,6 +62,10 @@ module.exports = {
 
   plugins: [
     new Dotenv(),
+    new DefinePlugin({ 
+      'process.env.API_URL_HTTP': JSON.stringify(process.env.services__sleeptracker__http__0),
+      'process.env.API_URL_HTTPS': JSON.stringify(process.env.services__sleeptracker__https__0),
+      'process.env.PORT': JSON.stringify(process.env.PORT) }),
     new HtmlWebpackPlugin({
       title: "our project",
       template: "src/index.html",
@@ -76,9 +81,7 @@ module.exports = {
       minimizer: {
         implementation: ImageMinimizerPlugin.imageminMinify,
         options: {
-          plugins: [
-            ["imagemin-webp", { quality: 75 }],
-          ],
+          plugins: [["imagemin-webp", { quality: 75 }]],
         },
       },
       generator: [
@@ -86,9 +89,7 @@ module.exports = {
           preset: "webp",
           implementation: ImageMinimizerPlugin.imageminGenerate,
           options: {
-            plugins: [
-              ["imagemin-webp", { quality: 75 }],
-            ],
+            plugins: [["imagemin-webp", { quality: 75 }]],
           },
         },
       ],
@@ -98,8 +99,8 @@ module.exports = {
   devServer: {
     static: path.join(__dirname, "dist"),
     compress: true,
-    port: 4000,
+    port: process.env.PORT,
     hot: false,
-    liveReload: true,
+    liveReload: true
   },
 };

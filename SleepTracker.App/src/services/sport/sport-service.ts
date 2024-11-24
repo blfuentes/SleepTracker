@@ -1,6 +1,7 @@
 import { Sport } from "./models/sport";
 import { SportBinding } from "./models/sport-binding";
 import { BindingElement } from "../common/binding-element";
+import { apiConfig } from "../../api.config";
 
 const sportTemplate = require("../../../assets/templates/sports.html");
 
@@ -100,7 +101,7 @@ async function SaveSport(event: Event, sportsCollection: SportBinding[]): Promis
 
     const isUpdate = formData.get("IsNew") !== 'on';
 
-    const url = isUpdate ? process.env.API_URL + "/api/sports/" + formData.get("SportId") : process.env.API_URL + "/api/sports";
+    const url = isUpdate ? apiConfig.baseUrl + "/api/sports/" + formData.get("SportId") : apiConfig.baseUrl + "/api/sports";
     const response = await fetch(url, {
       method: isUpdate ? "PUT" : "POST",
       headers: {

@@ -34,6 +34,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\SleepTracker.IdentityLibrary\SleepTracker.IdentityLibrary.csproj" />
+	  <ProjectReference Include="..\SleepTracker.ServiceDefaults\SleepTracker.ServiceDefaults.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "echo server running on http://localhost:4000/ && webpack-dev-server --mode development",
+    "start": "echo server running on && webpack-dev-server --mode development",
     "build": "webpack --mode production"
   },
   "keywords": [],
@@ -14,6 +14,7 @@
   "devDependencies": {
     "@types/node": "^22.9.0",
     "clean-webpack-plugin": "^4.0.0",
+    "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
     "dotenv-webpack": "^8.1.0",
     "file-loader": "^6.2.0",

@@ -1,3 +1,4 @@
+import { apiConfig } from "../../api.config";
 import { BindingElement } from "../common/binding-element";
 import { ValidationIssue } from "../common/validation-issue";
 import { Login } from "./models/login";
@@ -34,8 +35,6 @@ class AuthService {
     }
 
     if (currentUser && currentUser.isAuthenticated) {
-      formAddSport.style.visibility = "hidden";
-      welcomeContainer.style.visibility = "visible";
       updateHome(currentUser);
     } else {
       formAddSport.style.visibility = "visible";
@@ -75,7 +74,7 @@ async function LoginOrRegister(event: Event): Promise<void> {
     const jsonPayload = JSON.stringify(formObject);
     const isRegister = formData.get("ExistingAccount") !== 'on';
 
-    const url = process.env.API_URL + (isRegister ? "/api/auth/register" :  "/api/auth/login");
+    const url = apiConfig.baseUrl + (isRegister ? "/api/auth/register" :  "/api/auth/login");
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -120,7 +119,17 @@ function storeSession(sessionData: TokenResponse, user: User) {
 }
 
 function updateHome(user: User) {
+  const formAddSport = document.getElementById(
+    "loginOrRegisterForm"
+  ) as HTMLFormElement;
+
+  const welcomeContainer = document.getElementsByClassName(
+    "welcome-container"
+  )[0] as HTMLDivElement;
   const contentContainer = document.getElementById("user-name");
+
+  formAddSport.style.visibility = "hidden";
+  welcomeContainer.style.visibility = "visible";
   contentContainer!.textContent = user.email;
 }
 

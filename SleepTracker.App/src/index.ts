@@ -5,8 +5,7 @@ import "./services/sport/models/sport-binding";
 import { User } from "./services/auth/models/user";
 import AuthService from "./services/auth/auth-service";
 import SportService from "./services/sport/sport-service";
-
-let currentUser : User;
+import { apiConfig } from "./api.config";
 
 async function main(): Promise<void> {
   // add event listeners to all links
@@ -42,7 +41,7 @@ async function main(): Promise<void> {
 
 async function loadData(href: string): Promise<Object> {
   try {
-    const response = await fetch(process.env.API_URL + href);
+    const response = await fetch(apiConfig.baseUrl + href);
     const json = await response.json();
     const data = json as any;
     if (!data) {
