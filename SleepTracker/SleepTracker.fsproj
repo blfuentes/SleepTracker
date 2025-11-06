@@ -9,6 +9,7 @@
 	<ItemGroup>
 		<None Include="Data\setup.sql" />
 		<None Include="Dockerfile" />
+		<Compile Include="Models\Sport\SportModel.fs" />
 		<Compile Include="Utils\ExtensionMethods.fs" />
 		<Compile Include="Models\Account\IdentityIssue.fs" />
 		<Compile Include="Models\Account\TokenResponse.fs" />
@@ -35,6 +36,10 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\SleepTracker.IdentityLibrary\SleepTracker.IdentityLibrary.csproj" />
 	  <ProjectReference Include="..\SleepTracker.ServiceDefaults\SleepTracker.ServiceDefaults.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Models\Sport\Create\" />
 	</ItemGroup>
 
 </Project>

@@ -8,6 +8,7 @@ import { User } from "./models/user";
 
 const authTemplate = require("../../../assets/templates/login.html");
 
+const SessionData = "SessionData";
 const Email = "email";
 const Password = "password";
 const ConfirmPassword = "confirmPassword";
@@ -62,6 +63,13 @@ class AuthService {
         errorContainer!.style.visibility = "hidden";
       });
     }
+    
+  }
+  
+  static loadSession() : TokenResponse {
+      const sessionData = JSON.parse(sessionStorage.getItem(SessionData)!) as TokenResponse;
+  
+      return sessionData;
   }
 }
 
@@ -91,10 +99,13 @@ async function LoginOrRegister(event: Event): Promise<void> {
       storeSession(tokenResponse, currentUser);
       updateHome(currentUser);
     } else {
-        console.error("Failed to register sport");
+        console.error("Failed to log in");
         switch (response.status) {
             case 409:
                 displayError("Email already taken");
+                break;
+            case 401:
+                displayError("Incorrect user/password");
                 break;
             case 400:
               const validation = await response.json() as ValidationIssue[];
@@ -115,6 +126,7 @@ function storeSession(sessionData: TokenResponse, user: User) {
   sessionStorage.setItem("RefreshToken", sessionData.refreshToken);
   sessionStorage.setItem("TokenType", sessionData.tokenType);
 
+  sessionStorage.setItem(SessionData, JSON.stringify(sessionData));
   sessionStorage.setItem(UserData, JSON.stringify(user));
 }
 

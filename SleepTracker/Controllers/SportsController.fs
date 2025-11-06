@@ -8,6 +8,7 @@ open SleepTracker.Services
 open SleepTracker.Models.Entities
 open Microsoft.Extensions.Configuration
 open Microsoft.AspNetCore.Authorization
+open SleeptTracker.Models.Sport
 
 [<ApiController>]
 [<Route("api/[controller]")>]
@@ -26,7 +27,7 @@ type SportsController (logger : ILogger<SportsController>, configuration: IConfi
 
     [<HttpPost>]
     [<Authorize>]
-    member this.Create() =
+    member this.Create([<FromBody>] model: SportModel) =
         if not (this.ModelState.IsValid) then
             this.BadRequest() :> ActionResult
         else
@@ -34,11 +35,11 @@ type SportsController (logger : ILogger<SportsController>, configuration: IConfi
                 DatabaseService.getSports(this.ConnString) 
                 |> Async.AwaitTask
                 |> Async.RunSynchronously
-            let sport = existingSports |> Seq.tryFind (fun s -> s.SportName = (this.Request.Form["SportName"] |> Seq.head))
+            let sport = existingSports |> Seq.tryFind (fun s -> s.SportName = model.SportName)
             match sport with
             | Some _ -> this.Conflict()
             | None ->
-                let newSport : SportEntity.Sport = { SportId = 0; SportName = (this.Request.Form["SportName"] |> Seq.head); SportNotes = (this.Request.Form["SportNotes"] |> Seq.head) }
+                let newSport : SportEntity.Sport = { SportId = 0; SportName = model.SportName; SportNotes = model.SportNotes }
                 let result = DatabaseService.createSport (this.ConnString)  newSport
                 match result with
                 | Some sport -> this.Created("", sport) :> ActionResult

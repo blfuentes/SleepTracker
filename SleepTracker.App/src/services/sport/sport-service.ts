@@ -2,6 +2,7 @@ import { Sport } from "./models/sport";
 import { SportBinding } from "./models/sport-binding";
 import { BindingElement } from "../common/binding-element";
 import { apiConfig } from "../../api.config";
+import AuthService from "../auth/auth-service";
 
 const sportTemplate = require("../../../assets/templates/sports.html");
 
@@ -101,13 +102,22 @@ async function SaveSport(event: Event, sportsCollection: SportBinding[]): Promis
 
     const isUpdate = formData.get("IsNew") !== 'on';
 
+    const sessionData = AuthService.loadSession();
+
     const url = isUpdate ? apiConfig.baseUrl + "/api/sports/" + formData.get("SportId") : apiConfig.baseUrl + "/api/sports";
+    const body = {
+      sportId: "0",
+      sportName: formData.get("SportName"),
+      sportNotes: formData.get("SportNotes")
+    }
     const response = await fetch(url, {
       method: isUpdate ? "PUT" : "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionData.accessToken}`
       },
-      body: urlEncodedData,
+      body: JSON.stringify(body),
+      // credentials: "include"
     });
 
     if (response.ok) {

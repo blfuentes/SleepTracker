@@ -47,15 +47,18 @@ type AuthController (
             if user = null then
                 return this.Unauthorized("Invalid email or password") :> IActionResult
             else
-                let! result = signInManager.PasswordSignInAsync(user.UserName, model.Password, true, lockoutOnFailure = false)
-                if result.Succeeded then
-                    // Generate JWT token
+                let! passwordValid = userManager.CheckPasswordAsync(user, model.Password)
+                if passwordValid then
+                    // Password IS valid, now generate the token
                     let tokenHandler = JwtSecurityTokenHandler()
+                    printfn "using key:%s" configuration["Jwt:Key"]
                     let key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"])
+                    JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear()
                     let tokenDescriptor = SecurityTokenDescriptor(
                         Subject = ClaimsIdentity([|
                             Claim(ClaimTypes.Name, user.UserName)
                             Claim(ClaimTypes.NameIdentifier, user.Id)
+                            Claim(JwtRegisteredClaimNames.Sub, user.Id)
                         |]),
                         Expires = DateTime.UtcNow.AddHours(1),
                         SigningCredentials = SigningCredentials(SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -63,11 +66,13 @@ type AuthController (
                     let token = tokenHandler.CreateToken(tokenDescriptor)
                     let tokenString = tokenHandler.WriteToken(token)
                     let expiresIn = int (tokenDescriptor.Expires.Value - DateTime.UtcNow).TotalSeconds
-                    // Generate refresh token (for demonstration purposes, this is a simple string)
+                    
                     let refreshToken = Guid.NewGuid().ToString()
                     let response = { TokenType = "Bearer"; AccessToken = tokenString; ExpiresIn = expiresIn; RefreshToken = refreshToken }
+                    
                     return this.Ok(response) :> IActionResult
                 else
+                    // Password was invalid
                     return this.Unauthorized("Invalid email or password") :> IActionResult
         }
 

@@ -11,6 +11,7 @@ open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Microsoft.AspNetCore.Identity 
 open Microsoft.EntityFrameworkCore
+open System.Threading.Tasks
 
 open SleepTracker.IdentityLibrary
 open SleepTracker.Services
@@ -31,14 +32,17 @@ module Program =
         builder.Services.AddHttpContextAccessor()
 
         builder.Services
-            .AddIdentity<IdentityUser, IdentityRole>()
+            //.AddIdentity<IdentityUser, IdentityRole>()
+            .AddIdentityCore<IdentityUser>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddSignInManager()
             .AddDefaultTokenProviders()
 
         builder.Services.AddAuthorization()
 
         // Configure JWT Authentication
         let key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+        printfn "using key %s" builder.Configuration["Jwt:Key"]
         builder.Services.AddAuthentication(fun options ->
                 // Disable cookie authentication
                 options.DefaultScheme <- JwtBearerDefaults.AuthenticationScheme
@@ -46,25 +50,34 @@ module Program =
                 options.RequireAuthenticatedSignIn <- false
             )
             .AddJwtBearer(fun options ->
-                options.SaveToken = true
+                options.SaveToken <- true
                 options.TokenValidationParameters <- TokenValidationParameters(
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 )
-                options.Events <- JwtBearerEvents(
-                    OnChallenge = fun context ->
-                        // Override the default challenge behavior to return 401 Unauthorized
-                        context.Response.StatusCode <- 401
-                        context.Response.ContentType <- "application/json"
-                        task {
-                            // Create a stream writer and write the response
-                            use writer = new System.IO.StreamWriter(context.Response.Body)
-                            do! writer.WriteAsync("{\"message\":\"Unauthorized\"}")
-                            do! writer.FlushAsync() // Ensure content is sent
-                        }
-                ))
+            
+                options.Events <- JwtBearerEvents()
+                options.Events.OnAuthenticationFailed <- fun ctx ->
+                    printfn "JWT authentication failed: %s" ctx.Exception.Message
+                    Task.CompletedTask
+                
+                options.Events.OnTokenValidated <- fun ctx ->
+                    printfn "JWT validated for user: %s" (ctx.Principal.Identity.Name)
+                    Task.CompletedTask
+                
+                options.Events.OnChallenge <- fun ctx ->
+                    ctx.HandleResponse()
+
+                    ctx.Response.StatusCode <- 401
+                    ctx.Response.ContentType <- "application/json"
+                    task {
+                        use writer = new System.IO.StreamWriter(ctx.Response.Body)
+                        do! writer.WriteAsync("{\"message\":\"Unauthorized\"}")
+                        do! writer.FlushAsync()
+                    }
+            )
 
         builder.Services
             .AddDbContext<ApplicationDbContext>(fun options -> 
@@ -75,9 +88,13 @@ module Program =
 
         builder.Services.AddCors(fun options -> 
             options.AddPolicy("AllowAll", fun builder -> 
-                 builder.AllowAnyHeader()
+                 builder
+                        //.WithOrigins("http://localhost:8080")
                         .AllowAnyOrigin()
-                        .WithMethods("GET", "POST", "PUT") |> ignore))
+                        .AllowAnyHeader()
+                        .WithMethods("GET", "POST", "PUT", "OPTIONS")
+                        //.AllowCredentials()
+                        |> ignore))
             |> ignore
 
         let app = builder.Build()
